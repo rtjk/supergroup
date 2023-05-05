@@ -26,7 +26,7 @@ def handle_client(conn, addr):
             # send the message to all connected clients
             for c in connections:
                 if c != conn:
-                    c.sendall(f"{addr[0]}:{addr[1]} says: {data}".encode())
+                    c.sendall({data}.encode())#f"{addr[0]}:{addr[1]} says: {data}".encode())
             # log the communication to the console
             print(f"{addr[0]}:{addr[1]} says: {data}")
         except Exception as e:
