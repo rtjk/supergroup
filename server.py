@@ -2,7 +2,7 @@ import socket
 import threading
 
 HOST = '192.168.203.162'  # server host
-PORT = 1234  # server port
+PORT = 8090  # server port
 
 # create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -16,7 +16,7 @@ connections = []
 def handle_client(conn, addr):
     """Thread function to handle a client connection"""
     print(f"Client connected from {addr[0]}:{addr[1]}")
-    conn.sendall("Welcome to the server!".encode())
+    conn.sendall("Welcome to 'Perfect Strangers' Simulation!".encode())
 
     while True:
         try:
@@ -51,7 +51,7 @@ def console_input():
             for c in connections:
                 c.sendall(f"{data}".encode())
             # log the communication to the console
-            print(f"Server says: {data}")
+            #print(f"Server says: {data}")
         except Exception as e:
             print(f"Error: {e}")
             break
