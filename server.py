@@ -1,7 +1,7 @@
 import socket
 import threading
 
-HOST = '192.168.203.162'  # server host
+HOST = '0.0.0.0'  # server host
 PORT = 8090  # server port
 
 # create a TCP/IP socket
