@@ -1,8 +1,11 @@
 import socket
 import threading
 
-HOST = '192.168.1.25'  # server host
+HOST = '192.168.1.231'  # server host
 PORT = 8090  # server port
+
+CHARACTERS = ["All","Rocco","Eva","Lele","Carlotta","Peppe","Bianca","Cosimo"]
+EMOTIONS = {"B":"happy","E": "angry","D": "shocked","E": "sad","F": "relaxed", "G": "afraid","H": "cautious","I": "surprised","J": "annoyed","K": "embarrassed","L": "anxious"}
 
 # create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -15,7 +18,7 @@ def receive_messages():
     while True:
         try:
             data = sock.recv(1024).decode()
-            print(data)
+            print(f"{ CHARACTERS[int(data[0])]} is {EMOTIONS[data[1]]}({data[3]}) with {CHARACTERS[int(data[2])]}")
         except Exception as e:
             print(f"Error: {e}")
             break
