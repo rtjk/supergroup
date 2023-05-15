@@ -36,7 +36,7 @@ def handle_client(conn, addr):
             # send the message to all connected clients
             for c in connections:
                 if c != conn:
-                    time.sleep(2)
+                    time.sleep(5)
                     c.sendall(f"{data}".encode())#f"{addr[0]}:{addr[1]} says: {data}".encode())
             
             # log the communication to the console
