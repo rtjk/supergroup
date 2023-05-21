@@ -1,7 +1,7 @@
 import socket
 import threading
 
-HOST = '192.168.1.231'  # server host
+HOST = '192.168.0.202'  # server host
 PORT = 8090  # server port
 
 CHARACTERS = ["All","Rocco","Eva","Lele","Carlotta","Peppe","Bianca","Cosimo"]
@@ -18,7 +18,12 @@ def receive_messages():
     while True:
         try:
             data = sock.recv(1024).decode()
-            print(f"{ CHARACTERS[int(data[0])]} is {EMOTIONS[data[1]]}({data[3]}) with {CHARACTERS[int(data[2])]}")
+            if data[0] == "G":
+                print(f"God sent SMS: {data}")
+            elif len(data)==4:
+                print(f"{ CHARACTERS[int(data[0])]} is {EMOTIONS[data[1]]}({data[3]}) with {CHARACTERS[int(data[2])]}")
+            else:
+                print(f"{data}")
         except Exception as e:
             print(f"Error: {e}")
             break
