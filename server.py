@@ -4,14 +4,14 @@ import time
 import sys
 import os
 
-HOST = '192.168.1.130'  # server host
-PORT = 25563  # server port
+HOST = '192.168.1.101'  # server host
+PORT = 8090  # server port
 
 debug_mode = False
 
 CHARACTERS = ["All","Rocco","Eva","Lele","Carlotta","Peppe","Bianca","Cosimo"]
 IPs = [HOST,"","","","","","",""]
-EMOTIONS = {"B":"happy","E": "angry","D": "shocked","E": "sad","F": "relaxed", "G": "afraid","H": "cautious","I": "surprised","J": "annoyed","K": "embarrassed","L": "anxious"}
+EMOTIONS = {"A": "idle", "B":"happy","C": "angry","D": "shocked","E": "sad","F": "relaxed", "G": "afraid","H": "cautious","I": "surprised","J": "annoyed","K": "embarrassed","L": "anxious"}
 # create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -34,8 +34,7 @@ def handle_client(conn, addr):
     while True:
         try:
             data = conn.recv(1024).decode()
-            if not data:
-                break
+            
 
             # log the communication to the console
             #print(f"{addr[0]}:{addr[1]} says: {data}")
@@ -49,6 +48,7 @@ def handle_client(conn, addr):
                 print("Received GG")
 
             data = data + '\n'
+            print(repr(data))
             # send the message to all connected clients
             for c in connections:
                 if c != conn:
