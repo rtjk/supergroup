@@ -1,9 +1,11 @@
 import socket
 import threading
 import time
+import sys
+import os
 
-HOST = '0.0.0.0'  # server host
-PORT = 8090  # server port
+HOST = '192.168.1.130'  # server host
+PORT = 25563  # server port
 
 debug_mode = False
 
@@ -14,6 +16,7 @@ EMOTIONS = {"B":"happy","E": "angry","D": "shocked","E": "sad","F": "relaxed", "
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # bind the socket to a specific address and port
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 sock.bind((HOST, PORT))
 
 # list to store client connections
@@ -33,30 +36,26 @@ def handle_client(conn, addr):
             data = conn.recv(1024).decode()
             if not data:
                 break
-            if data[0] == "G" and data[1] == "G":
-                # send the message to all connected clients
-                for c in connections:
-                    if c != conn:
-                        c.sendall(f"{data}".encode())#f"{addr[0]}:{addr[1]} says: {data}".encode())
-            elif len(data)==4:
-                # send the message to all connected clients
-                for c in connections:
-                    if c != conn:
-                        time.sleep(5)
-                        c.sendall(f"{data}".encode())#f"{addr[0]}:{addr[1]} says: {data}".encode())
-                
-                # log the communication to the console
-                #print(f"{addr[0]}:{addr[1]} says: {data}")
+
+            # log the communication to the console
+            #print(f"{addr[0]}:{addr[1]} says: {data}")
+            if data[0] != 'G':
                 if debug_mode=="1":
                     print(f"{CHARACTERS[int(data[0])]} says: {data}")#f"{addr[0]}:{addr[1]} says: {data}")
                     IPs[int(data[0])] = addr[0]
                 else: 
                     print(f"{ CHARACTERS[int(data[0])]} is {EMOTIONS[data[1]]}({data[3]}) with {CHARACTERS[int(data[2])]}")
             else:
-                # send the message to all connected clients
-                for c in connections:
-                    if c != conn:
-                        c.sendall(f"{data}".encode())#f"{addr[0]}:{addr[1]} says: {data}".encode())
+                print("Received GG")
+
+            data = data + '\n'
+            # send the message to all connected clients
+            for c in connections:
+                if c != conn:
+                    if data[1] != 'G':
+                        time.sleep(5)
+                    c.sendall(f"{data}".encode())#f"{addr[0]}:{addr[1]} says: {data}".encode())
+            
         except Exception as e:
             print(f"Error: {e}")
             break
@@ -74,10 +73,23 @@ print(f"Server listening on {HOST}:{PORT}...")
 def console_input():
     while True:
         try:
-            data = input()
+            data = input() + '\n'
+
+            # check if the input is "quit" and terminate the program
+            if data.lower() == "quit\n":
+                print("Quitting the program...")
+                # close all connections
+                for conn in connections:
+                    conn.close()
+                # close the server socket
+                sock.close()
+                # exit the program
+                os._exit(0)
+
             # send the message to all connected clients
             for c in connections:
                 c.sendall(f"{data}".encode())
+            
             # log the communication to the console
             #print(f"Server says: {data}")
         except Exception as e:
