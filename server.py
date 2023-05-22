@@ -4,7 +4,7 @@ import time
 import sys
 import os
 
-HOST = '192.168.1.101'  # server host
+HOST = '0.0.0.0'  # server host
 PORT = 8090  # server port
 
 debug_mode = False
@@ -40,14 +40,13 @@ def handle_client(conn, addr):
         try:
             data_received = conn.recv(1024).decode()
             
-            print(repr(data_received))
+            #print(repr(data_received))
             datas = data_received.splitlines()
-            print(datas)
+            #print(datas)
 
             for data in datas:
                 # log the communication to the console
                 #print(f"{addr[0]}:{addr[1]} says: {data}")
-                data = data + '\n'
                 if data[0] != 'G':
                     if debug_mode=="1":
                         print(f"{CHARACTERS[int(data[0])]} says: {data}")#f"{addr[0]}:{addr[1]} says: {data}")
@@ -57,6 +56,7 @@ def handle_client(conn, addr):
                 else:
                     print("Received GG")
 
+                data = data + '\n'
                 # send the message to all connected clients
                 for c in connections:
                     if c != conn:
